@@ -34,7 +34,7 @@
 
 #include <clocale>
 
-void InitUiResources() { Q_INIT_RESOURCE(resources); }
+static void InitUiResources() { Q_INIT_RESOURCE(resources); }
 
 namespace colmap {
 
