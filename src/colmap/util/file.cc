@@ -393,7 +393,7 @@ std::string DownloadAndCacheFile(const std::string& uri) {
   } else {
     const std::optional<std::filesystem::path> home_dir = HomeDir();
     THROW_CHECK(home_dir.has_value());
-    download_cache_dir = *home_dir / ".cache/colmap";
+    download_cache_dir = *home_dir / ".cache" / "colmap";
   }
 
   if (!std::filesystem::exists(download_cache_dir)) {
