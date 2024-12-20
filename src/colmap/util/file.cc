@@ -217,7 +217,8 @@ std::optional<std::string> GetEnvSafe(const char* key) {
   }
   std::string value(size, ' ');
   getenv_s(&size, value.data(), size, key);
-  return value;
+  THROW_CHECK_EQ(value.back(), '\0');
+  return value.substr(0, size - 1);
 #else
   // Non-MSVC replacement for std::getenv_s. The safe variant
   // std::getenv_s is not available on all platforms, unfortunately.
@@ -241,6 +242,11 @@ std::optional<std::string> GetEnvSafe(const char* key) {
 
 std::optional<std::filesystem::path> HomeDir() {
 #ifdef _MSC_VER
+  std::optional<std::string> userprofile = GetEnvSafe("USERPROFILE");
+  if (userprofile.has_value()) {
+    StringTrim(&userprofile.value());
+    return *userprofile;
+  }
   const std::optional<std::string> homedrive = GetEnvSafe("HOMEDRIVE");
   const std::optional<std::string> homepath = GetEnvSafe("HOMEPATH");
   if (!homedrive.has_value() || !homepath.has_value()) {
